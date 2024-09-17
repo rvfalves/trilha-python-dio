@@ -34,7 +34,7 @@ class Cliente:
 
     def realizar_transacao(self, conta, transacao):
         
-        if conta.historico.filtrar_transacoes_do_dia() < 10:
+        if len(conta.historico.filtrar_transacoes_do_dia()) < 10:
             transacao.registrar(conta)
         else:
             print("\n@@@ Você excedeu o número de transações permitidas para hoje! @@@")
@@ -175,7 +175,7 @@ class Historico:
         for transacao in self._transacoes:
             if transacao["data"][:10] == datetime.now().date().strftime("%d-%m-%Y"):
                 transacoes_do_dia.append(transacao)
-        return len(transacoes_do_dia)
+        return transacoes_do_dia
         
 
 class Transacao(ABC):
