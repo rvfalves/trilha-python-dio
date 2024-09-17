@@ -34,9 +34,8 @@ class Cliente:
 
     def realizar_transacao(self, conta, transacao):
         
-        if self.indice_conta < 10:
+        if conta.historico.filtrar_transacoes_do_dia() < 10:
             transacao.registrar(conta)
-            self.indice_conta += 1
         else:
             print("\n@@@ Você excedeu o número de transações permitidas para hoje! @@@")
 
@@ -152,7 +151,6 @@ class ContaCorrente(Conta):
 class Historico:
     def __init__(self):
         self._transacoes = []
-        self._transacoes_do_dia = []
 
     @property
     def transacoes(self):
@@ -173,9 +171,11 @@ class Historico:
                 yield transacao
 
     def filtrar_transacoes_do_dia(self):
+        transacoes_do_dia = []
         for transacao in self._transacoes:
-            if transacao["data"].date() == datetime.now().date():
-                self._transacoes_do_dia.append()
+            if transacao["data"][:10] == datetime.now().date().strftime("%d-%m-%Y"):
+                transacoes_do_dia.append(transacao)
+        return len(transacoes_do_dia)
         
 
 class Transacao(ABC):
