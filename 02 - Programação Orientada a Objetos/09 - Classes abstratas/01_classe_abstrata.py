@@ -6,9 +6,9 @@ class ControleRemoto(ABC):
     def ligar(self):
         pass
 
-    @abstractmethod
+#    @abstractmethod
     def desligar(self):
-        pass
+        print("Desligando...")
 
     @property
     @abstractproperty
@@ -35,9 +35,9 @@ class ControleArCondicionado(ControleRemoto):
         print("Ligando o Ar Condicionado...")
         print("Ligado!")
 
-    def desligar(self):
-        print("Desligando o Ar Condicionado...")
-        print("Desligado!")
+#    def desligar(self):
+#        print("Desligando o Ar Condicionado...")
+#        print("Desligado!")
 
     @property
     def marca(self):
@@ -54,3 +54,7 @@ controle = ControleArCondicionado()
 controle.ligar()
 controle.desligar()
 print(controle.marca)
+
+# Não é possível instanciar uma classe abstrata (mesmo que ela tenha métodos não abastratos)
+#controle = ControleRemoto()
+#controle.desligar()
