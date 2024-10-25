@@ -11,7 +11,6 @@ class Categoria:
 
     # TODOS: Implementar o método adicionar_venda para adicionar uma venda à lista de vendas:
     def adicionar_venda(self, venda):
-        #if venda.__class__.__name__ == "Venda":
         self.vendas.append(venda)
 
     # TODOS: Implementar o método total_vendas para calcular e retornar o total das vendas
