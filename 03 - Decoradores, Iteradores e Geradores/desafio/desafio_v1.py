@@ -1,17 +1,23 @@
-import textwrap
+import textwrap, functools
 from abc import ABC, abstractclassmethod, abstractproperty
 from datetime import datetime
 
 
 class ContaIterador:
     def __init__(self, contas):
-        pass
+        self._contas = contas
+        self._contador = 0
 
     def __iter__(self):
-        pass
+        return self
 
     def __next__(self):
-        pass
+        try:
+            conta = self._contas[self._contador]
+            self._contador += 1
+            return conta
+        except IndexError:
+            raise StopIteration
 
 
 class Cliente:
@@ -124,6 +130,7 @@ class ContaCorrente(Conta):
             Agência:\t{self.agencia}
             C/C:\t\t{self.numero}
             Titular:\t{self.cliente.nome}
+            Saldo:\t\t{self.saldo}
         """
 
 
@@ -145,7 +152,9 @@ class Historico:
         )
 
     def gerar_relatorio(self, tipo_transacao=None):
-        pass
+        for transacao in self._transacoes:
+            if tipo_transacao == None or transacao.__class__.__name__.lower() == tipo_transacao.lower():
+                yield transacao
 
 
 class Transacao(ABC):
@@ -190,7 +199,12 @@ class Deposito(Transacao):
 
 
 def log_transacao(func):
-    pass
+    @functools.wraps(func)
+    def envelope(*args, **kargs):
+        print(f"{datetime.now().strftime("%d-%m-%Y %H:%M:%s")} {func.__name__}")
+        return func(*args, **kargs)
+
+    return envelope
 
 
 def menu():
@@ -274,14 +288,14 @@ def exibir_extrato(clientes):
 
     print("\n================ EXTRATO ================")
     # TODO: atualizar a implementação para utilizar o gerador definido em Historico
-    transacoes = conta.historico.transacoes
-
+    
+    tem_transacao = False
     extrato = ""
-    if not transacoes:
+    for transacao in conta.historico.gerar_relatorio():
+        extrato += f"\n{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}"
+        tem_transacao = True
+    if not tem_transacao:
         extrato = "Não foram realizadas movimentações."
-    else:
-        for transacao in transacoes:
-            extrato += f"\n{transacao['tipo']}:\n\tR$ {transacao['valor']:.2f}"
 
     print(extrato)
     print(f"\nSaldo:\n\tR$ {conta.saldo:.2f}")
@@ -326,7 +340,7 @@ def criar_conta(numero_conta, clientes, contas):
 
 def listar_contas(contas):
     # TODO: alterar implementação, para utilizar a classe ContaIterador
-    for conta in contas:
+    for conta in ContaIterador(contas):
         print("=" * 100)
         print(textwrap.dedent(str(conta)))
 
