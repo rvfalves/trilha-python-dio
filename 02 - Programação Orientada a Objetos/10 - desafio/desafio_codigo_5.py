@@ -1,4 +1,4 @@
-Class ConversorTemperatura:
+class ConversorTemperatura:
     def celsius_para_fahrenheit(self, celsius):
         return celsius*1.8+32
 
